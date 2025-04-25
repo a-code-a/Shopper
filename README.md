@@ -1,83 +1,60 @@
 # Aldi Flyer Scraper
 
-A collection of tools to automatically scrape and download flyers (Prospekte) from the Aldi Süd website.
+Ein Tool zum automatischen Scrapen und Herunterladen von Prospekten von der Aldi Süd Website.
 
 ## Features
 
-- Automatically navigates to the Aldi Süd prospekte page
-- Handles cookie consent banners
-- Extracts links to current flyers
-- Downloads the flyers as PDFs
-- Saves them to a specified directory
+- Navigiert automatisch zur Aldi Süd Prospekte-Seite
+- Behandelt Cookie-Consent-Banner
+- Extrahiert Links zu aktuellen Prospekten
+- Lädt die Prospekte als PDFs herunter
+- Speichert sie mit eindeutigen, beschreibenden Dateinamen
 
-## Requirements
+## Anforderungen
 
 - Python 3.6+
-- Chrome browser installed
-- Required Python packages (install using `pip install -r requirements.txt`):
-  - selenium
-  - beautifulsoup4
+- Chromium (wird automatisch von Playwright installiert)
+- Benötigte Python-Pakete (Installation mit `pip install -r requirements.txt`):
+  - playwright
   - requests
-  - webdriver-manager
-  - PyPDF2
-  - pyppeteer (optional, for the Puppeteer-based scraper)
 
-## Available Scripts
+## Installation
 
-This repository contains three different implementations of the Aldi flyer scraper:
-
-1. **aldi_flyer_scraper.py** - Selenium-based scraper with BeautifulSoup
-2. **aldi_flyer_downloader.py** - Alternative Selenium-based approach
-3. **aldi_puppeteer_scraper.py** - Puppeteer-based scraper (requires pyppeteer)
-
-Each implementation uses a different approach to handle the challenges of scraping a modern JavaScript-heavy website.
-
-## Usage
-
-### Selenium-based Scraper
+1. Klone dieses Repository oder lade die Dateien herunter
+2. Installiere die benötigten Abhängigkeiten:
 
 ```bash
-python aldi_flyer_scraper.py [--output_dir OUTPUT_DIR] [--headless]
+pip install -r requirements.txt
 ```
 
-### Alternative Selenium-based Downloader
+3. Installiere die Playwright-Browser:
 
 ```bash
-python aldi_flyer_downloader.py [--output_dir OUTPUT_DIR] [--headless]
+python -m playwright install
 ```
 
-### Puppeteer-based Scraper
+## Verwendung
 
 ```bash
-python aldi_puppeteer_scraper.py [--output_dir OUTPUT_DIR] [--headless]
+python aldi_scraper.py [--output_dir OUTPUT_DIR] [--headless]
 ```
 
-### Test Script
+### Parameter
 
-To test all three implementations and see which one works best:
+- `--output_dir`: Optionales Verzeichnis zum Speichern der heruntergeladenen Prospekte (Standard: `./prospekte`)
+- `--headless`: Browser im Headless-Modus ausführen (Standard: True)
+
+## Beispiel
 
 ```bash
-python test_scrapers.py [--output_dir OUTPUT_DIR] [--scraper {selenium,downloader,puppeteer,all}]
+python aldi_scraper.py --output_dir ./aldi_prospekte
 ```
 
-### Parameters
+Dies lädt alle aktuellen Aldi Süd Prospekte in das Verzeichnis `./aldi_prospekte` herunter.
 
-- `--output_dir`: Optional directory to save downloaded flyers (default: `./flyers`)
-- `--headless`: Run the browser in headless mode (default: True)
-- `--scraper`: Which scraper to test (default: all)
+## Hinweise
 
-## Example
-
-```bash
-python aldi_flyer_scraper.py --output_dir ./aldi_flyers --headless
-```
-
-This will download all current Aldi Süd flyers to the `./aldi_flyers` directory using the Selenium-based scraper in headless mode.
-
-## Notes
-
-- The tools use browser automation to handle JavaScript and cookie consent
-- Cookie consent is automatically handled
-- Flyers are saved with descriptive filenames including the date
-- If one implementation doesn't work, try another one
-- The Puppeteer-based scraper may provide better results for some users
+- Das Tool verwendet Playwright zur Browser-Automatisierung, um JavaScript-geladene Inhalte zu verarbeiten
+- Cookie-Consent wird automatisch behandelt
+- Prospekte werden mit eindeutigen, beschreibenden Dateinamen gespeichert, die das Datum und die Uhrzeit enthalten
+- Wenn ein Prospekt nicht heruntergeladen werden kann, wird ein Screenshot zur Fehlersuche gespeichert
