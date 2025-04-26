@@ -38,7 +38,7 @@ python -m playwright install
 ## Verwendung
 
 ```bash
-python aldi_scraper.py [--output_dir OUTPUT_DIR] [--headless] [--force]
+python aldi_scraper.py [--output_dir OUTPUT_DIR] [--headless] [--force] [--debug]
 ```
 
 ### Parameter
@@ -46,6 +46,7 @@ python aldi_scraper.py [--output_dir OUTPUT_DIR] [--headless] [--force]
 - `--output_dir`: Verzeichnis zum Speichern der heruntergeladenen Prospekte (Standard: `./prospekte`)
 - `--headless`: Browser im Headless-Modus ausführen (Standard: True)
 - `--force`: Prospekte erneut herunterladen, auch wenn sie bereits existieren (Standard: False)
+- `--debug`: Debug-Modus aktivieren, erstellt Screenshots bei Fehlern (Standard: False)
 
 ## Beispiele
 
@@ -103,7 +104,7 @@ Das Tool speichert Metadaten zu den heruntergeladenen Prospekten in einer JSON-D
 
 - Das Tool verwendet Playwright zur Browser-Automatisierung, um JavaScript-geladene Inhalte zu verarbeiten
 - Cookie-Consent wird automatisch behandelt
-- Wenn ein Prospekt nicht heruntergeladen werden kann, wird ein Screenshot zur Fehlersuche gespeichert
+- Im Debug-Modus werden Screenshots erstellt, wenn ein Prospekt nicht heruntergeladen werden kann
 
 ## Duplikaterkennung
 

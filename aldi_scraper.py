@@ -34,7 +34,7 @@ class AldiProspektScraper:
     BASE_URL = "https://www.aldi-sued.de/de/angebote/prospekte.html"
     METADATA_FILE = "prospekte_metadata.json"
 
-    def __init__(self, output_dir="./prospekte", headless=True, force_download=False):
+    def __init__(self, output_dir="./prospekte", headless=True, force_download=False, debug=False):
         """
         Initialisiert den Scraper.
 
@@ -42,10 +42,12 @@ class AldiProspektScraper:
             output_dir (str): Verzeichnis zum Speichern der heruntergeladenen Prospekte
             headless (bool): Ob der Browser im Headless-Modus ausgeführt werden soll
             force_download (bool): Ob Prospekte erneut heruntergeladen werden sollen, auch wenn sie bereits existieren
+            debug (bool): Ob Debug-Screenshots erstellt werden sollen, wenn ein Fehler auftritt
         """
         self.output_dir = output_dir
         self.headless = headless
         self.force_download = force_download
+        self.debug = debug
         self.metadata_path = os.path.join(output_dir, self.METADATA_FILE)
         self.metadata = self._load_metadata()
 
@@ -334,10 +336,11 @@ class AldiProspektScraper:
             await page.reload(wait_until='networkidle')
             await asyncio.sleep(5)  # Auf potenzielle PDF-Responses warten
 
-            # Screenshot für Debugging erstellen
-            screenshot_path = os.path.join(self.output_dir, f"debug_screenshot_{int(datetime.now().timestamp())}.png")
-            await page.screenshot(path=screenshot_path)
-            logger.info(f"Debug-Screenshot gespeichert unter {screenshot_path}")
+            # Screenshot für Debugging erstellen, wenn Debug-Modus aktiviert ist
+            if self.debug:
+                screenshot_path = os.path.join(self.output_dir, f"debug_screenshot_{int(datetime.now().timestamp())}.png")
+                await page.screenshot(path=screenshot_path)
+                logger.info(f"Debug-Screenshot gespeichert unter {screenshot_path}")
 
             # Methode 7: Nach data-src-Attributen suchen
             elements_with_data_src = await page.query_selector_all("[data-src*='.pdf']")
@@ -638,7 +641,8 @@ async def main_async(args):
     scraper = AldiProspektScraper(
         output_dir=args.output_dir,
         headless=args.headless,
-        force_download=args.force
+        force_download=args.force,
+        debug=args.debug
     )
     downloaded_files = await scraper.run()
 
@@ -658,6 +662,8 @@ def main():
                         help='Browser im Headless-Modus ausführen')
     parser.add_argument('--force', action='store_true', default=False,
                         help='Prospekte erneut herunterladen, auch wenn sie bereits existieren')
+    parser.add_argument('--debug', action='store_true', default=False,
+                        help='Debug-Modus aktivieren (erstellt Screenshots bei Fehlern)')
 
     args = parser.parse_args()
 
